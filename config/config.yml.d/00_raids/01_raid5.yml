@@ -1,0 +1,4 @@
+  raid5: &raid5
+    <<: *raid_template
+    raidlevel: 5
+  # Minimum three disks

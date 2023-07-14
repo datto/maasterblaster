@@ -1,0 +1,2 @@
+shortname,domain,machine_profile,macs,power,poweruser,powerpass,powerip,netcfg
+my-host-1,example.lan,focal-single-unbonded,3C:EC:EF:0C:78:1A,ipmi,ADMIN,ADMIN,<IPMI_IP>,bond0:<BOND0_IP> bond0.103:<BOND0.103_IP>

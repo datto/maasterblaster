@@ -1,0 +1,28 @@
+  focal-single-bonded:
+    <<: *focal-common
+    nonraids:
+      os:
+        swap_size: 5G
+        mountpoint: /
+        filesystem: ext4
+        match_on:
+          size_lessthan: 300G
+        bootable: true
+    networking:
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              in_csv:
+    user_data:
+      runcmd:
+        - userdel -r ubuntu
+        - rm -f /root/.ssh/authorized_keys
+        - FQDN=$(hostname -f) ; sed -i -e "s/certname.*$/certname          =\ ${FQDN}/g" /etc/puppetlabs/puppet/puppet.conf 
+        - systemctl enable puppet 
+        - systemctl start puppet
+        - echo "/opt/puppetlabs/bin/puppet agent -t" | at now + 1 minute

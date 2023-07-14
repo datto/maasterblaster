@@ -1,0 +1,3 @@
+shortname,domain,profile,macs,power,poweruser,powerpass,powerip,netcfg
+example-without-powerpass,example.lan,focal-raid1-bonded,bond0;00:00:5e:00:53:00 bond0;00:00:5e:00:53:01,ipmi,ADMIN,,192.0.2.1,eth0:198.51.100.1
+example-with-powerpass,example.lan,focal-raid1-bonded,bond0;00:00:5e:00:53:02 bond0;00:00:5e:00:53:03,ipmi,ADMIN,ADMIN,192.0.2.2,eth0:198.51.100.2

@@ -1,0 +1,75 @@
+  # Basic RAID1, intended to be inherited and extended
+  raid: &raid_template
+    raidlevel: 1
+    bootable: false
+    # filesystem: ext4
+    # mountpoint: /
+    # This is a bit of a hybrid that will actually do two RAID1 arrays
+    # One for / and one for swap
+    swap_size: 0
+    # List of disks,  sda, sdb, etc...
+    # potentially error prone depending on how they are connected
+    # disks:
+    # - sda
+    # - sdb
+    # Tags to match on (primarily "ssd")
+    # tags:
+    # - ssd
+    # Criteria to match on:
+    # match_on:
+    # model: model regex
+    #  i.e. model: KINGSTON
+    # size_lessthan: only matches drives less than this size in bytes
+    #  i.e: size_lessthan: 300G  # Less than 300G
+    # size_greaterthan: Only matches drives greater than this size in bytes
+    # Commonly used with size_lessthan to give you a range of sizes to
+    # narrow down to, useful if the box is all SSD and you want the two
+    # drives in a narrow size range for the OS mirror
+    #
+    # If you want a filesystem directly on the device (md devices typically)
+    # add a mountpoint and filesystem key
+    # If they are missing but the "bootable" key is present it'll
+    # default to / and ext4
+    # If you want to partition a device or disk add a partitions tree like this:
+    # partitions:
+    #   foo:
+    #     mountpoint: /bar
+    #     filesystem: ext4
+    #     size: 100G
+    #   baz:
+    #     mountpoint: /boo
+    #     filesystem: xfs
+    #     size: 100%  # % of remainder of the space on the device
+    # If you want to nest LVM into a partition, add an LVM block
+    # like below INSIDE the partition
+    # block like this:
+    # partitions:
+    #   ...
+    #   lvm_inside:
+    #     size: 10G
+    #     lvm:
+    #       enable: true
+    #       vg_name: lvm_inside
+    #       volumes:
+    #         foo:
+    #           mountpoint: /foo
+    #           filesystem: ext4
+    #           size: 10G
+    #         bar:
+    #           mountpoint: /var
+    #           filesystem: xfs
+    #           size: 100% # % of remainder of space in volume group
+    #           if you use %
+    # lvm:
+    # If set to true, this device will be a PV for a Volume group
+    #  enable: false
+    # VG name,  required if enable is True
+    #  vg_name: lxc
+    #  The volumes section IS REQUIRED if you want logical volumes
+    #  volumes:
+    #    myvol:
+    #      mountpoint: /mymount
+    #      lv_name: miney
+    #      size: 1T
+    #      filesystem?: ext4
+    #    ...

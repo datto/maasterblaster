@@ -1,0 +1,4 @@
+csvs/*
+!csvs/template.csv
+.venv*
+Pipfile.lock

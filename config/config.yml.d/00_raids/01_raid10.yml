@@ -1,0 +1,4 @@
+  raid10: &raid10
+    <<: *raid_template
+    raidlevel: 10
+    # Minimum four disks

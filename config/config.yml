@@ -1,0 +1,43 @@
+# Config.yml is a yaml file that uses reusable sections to reduce duplication.
+#
+# First off is the operatingsystems block,  this allows you to alias
+# known OS images's within maas to something friendly to link to in
+# the machine profiles
+#
+#
+---
+operatingsystems:
+  xenial-ga-upstream: &xenial-upstream
+    os: xenial
+    kernel: generic
+  xenial-hwe-upstream: &xenial-hwe
+    os: xenial
+    kernel: hwe-16.04
+  bionic-ga-upstream: &bionic-upstream
+    os: bionic
+    kernel: generic
+  bionic-hwe-upstream: &bionic-hwe
+    os: bionic
+    kernel: hwe-18.04
+  focal-ga-upstream: &focal-upstream
+    os: focal
+    kernel: generic
+  focal-hwe-upstream: &focal-hwe
+    os: focal
+    kernel: hwe-20.04
+  xenial-common: &xenial-common
+    os: xenial-customized
+    kernel: generic
+  bionc-common: &bionic-common
+    os: bionic-commonized
+    kernel: generic
+  focal-common: &focal-common
+    os: focal-commonized
+    kernel: generic
+
+# Remaining pieces are in separate files
+# Since the YAML spec doesn't have the concept of including files and having aliases/anchors work
+# We cheat and have python open this dir tree and concatenate them all together as one yaml blob
+# This makes it far more readable, using file naming tricks and dirs to control order of loading
+# NOTE: you CAN NOT create duplicate anchors, it will result in a parse error
+# Anchors are identified by an & character, and aliases by an * character.

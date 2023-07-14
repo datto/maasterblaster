@@ -1,0 +1,4 @@
+  raid1: &raid1
+    <<: *raid_template
+    raidlevel: 1
+  # Minimum two disks

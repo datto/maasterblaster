@@ -1,0 +1,15 @@
+# Machine Profiles:
+# These tie together the above sections to define the boilerplate for a machine
+# The input CSV will reference this and supplement it with the network
+# interface configurations
+# It is ASSUMED (we all know what they say about assumptions) that the
+# machines defined by these types will be identically configured hardware
+# wise, specifically with regards to network interfaces, and the number
+# of drives and their type and sizes. Some variation in the drives can be
+# handled, but swuitching OS disks from SSD to non-SSD will require using
+# a different machine profile for that variant as those options are
+# mutually exclusive.  Different OS SSD sizes/models can be tolerated and
+# matched with the above disk match_on parameters.
+#
+
+machine_profiles:

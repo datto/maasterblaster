@@ -1,0 +1,99 @@
+  torturetest:
+    <<: *focal-common
+    nonraids:
+      os:
+        match_on:
+          tags:
+            - ssd
+          size_lessthan: 300G
+        bootable: true
+        swap_size: 4G
+    raids:
+      raid0:
+        <<: *raid0
+        lvm:
+          enable: true
+          vg_name: raid0
+          volumes:
+            raid0_test:
+              lv_name: test
+              mountpoint: /raid0_lvm
+              filesystem: xfs
+              size: 100%
+        match_on:
+          size_greaterthan: 750G
+          max_devices: 2
+      raid1:
+        <<: *raid1
+        mountpoint: /raid1_trimirror
+        filesystem: ext4
+        match_on:
+          size_greaterthan: 750G
+          max_devices: 3
+      raid5_partitioned:
+        <<: *raid5
+        match_on:
+          size_greaterthan: 750G
+          max_devices: 4
+        partitions:
+          first:
+            mountpoint: /raid5_p1
+            size: 1T
+            filesystem: ext4
+          second:
+            mountpoint: /raid5_p2
+            size: 10T
+            filesystem: btrfs
+          third:
+            mountpoint: /raid5_p3
+            size: 100%
+            filesystem: xfs
+      raid6_lvm:
+        <<: *raid6
+        match_on:
+          size_greaterthan: 750G
+          max_devices: 4
+        lvm:
+          enable: true
+          vg_name: raid6
+          volumes:
+            first:
+              mountpoint: /raid6_p1
+              lv_name: foo
+              size: 1T
+              filesystem: ext4
+            second:
+              mountpoint: /raid6_p2
+              lv_name: bar
+              size: 3T
+              filesystem: btrfs
+            third:
+              lv_name: baz
+              size: 100%
+              filesystem: xfs
+      raid10_:
+        <<: *raid10
+        match_on:
+          size_greaterthan: 750G
+        mountpoint: /big_raid10
+        filesystem: ext4
+    networking:
+      fabric: sg-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 15
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+    user_data:
+        - userdel -r ubuntu
+        - rm -f /root/.ssh/authorized_keys

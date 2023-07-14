@@ -1,0 +1,237 @@
+  demo: &demo
+    <<: *focal-common
+    nonraids:
+      os:
+        swap_size: 5G
+        mountpoint: /
+        filesystem: ext4
+        match_on:
+          tags:
+            - ssd
+          size_lessthan: 300G
+        bootable: true
+    networking:
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+    user_data:
+      runcmd:
+        - userdel -r ubuntu
+        - rm -f /root/.ssh/authorized_keys
+        - FQDN=$(hostname -f) ; sed -i -e "s/certname.*$/certname          =\ ${FQDN}/g" /etc/puppetlabs/puppet/puppet.conf 
+        - systemctl enable puppet 
+        - systemctl start puppet
+        - echo "/opt/puppetlabs/bin/puppet agent -t" | at now + 1 minute
+  aue1_bridge_demo:
+    <<: *demo
+    networking:
+      fabric: au-east-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+  cae1_bridge_demo:
+    <<: *demo
+    networking:
+      fabric: ca-east-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+  isw1_bridge_demo:
+    <<: *demo
+    networking:
+      fabric: is-west-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+  gbe2_bridge_demo:
+    <<: *demo
+    networking:
+      fabric: gb-east-2
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+  sg1_bridge_demo: &sg1_raid
+    <<: *demo
+    networking:
+      fabric: sg-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+  sg1_nonraid_bridge_demo: &sg1_nonraid
+    <<: *demo
+    raids:
+    nonraids:
+      os:
+        match_on:
+          tags:
+            - ssd
+          size_lessthan: 300G
+        bootable: true
+        lvm:
+          enable: true
+          vg_name: ubuntu
+          volumes:
+            root:
+              lv_name: root
+              filesystem: ext4
+              mountpoint: /
+              size: 90%
+            swap:
+              lv_name: swap
+              filesystem: swap
+              mountpoint: none
+              size: 100%
+    networking:
+      fabric: sg-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+  sg1_maas_test_1:
+    <<: *sg1_raid
+    <<: *focal-common
+  sg1_maas_test_3:
+    <<: *sg1_nonraid
+    <<: *bionic-common
+  sg1_maas_test_4:
+    <<: *sg1_nonraid
+    <<: *focal-common
+  sg1_maas_test_2:
+    <<: *focal-common
+    raids:
+      os:
+        <<: *raid1
+        swap_size: 6G
+        match_on:
+          tags:
+            - ssd
+          size_lessthan: 300G
+          max_devices: 2
+        bootable: true
+      raid10:
+        <<: *raid10
+        match_on:
+          tag:
+            - rotary
+          size_greaterthan: 750G
+        partitions:
+          nova-lib:
+            size: 400G
+            lvm:
+              enable: true
+              vg_name: nova-lib
+              volumes:
+                lv0:
+                  mountpoint: /var/lib/nova
+                  lv_name: lv0
+                  filesystem: xfs
+                  size: 100%
+          nova-lvm:
+            size: 100%
+            lvm:
+              enable: true
+              vg_name: nova-lvm
+              volumes:
+                dummy:
+                  lv_name: lv1
+                  size: 20M
+    networking:
+      fabric: sg-1
+      interfaces:
+        bond0:
+          bonded: true
+          slaves:
+            by_mac:
+              in_csv:
+          networks:
+            primary:
+              vlan: 35
+              default_gateway: false
+              bridges:
+                br0:
+                  bridge_stp: false
+                  bridge_forward_delay: 0
+                  in_csv:
+    user_data:
+      runcmd:
+        - userdel -r ubuntu
+        - rm -f /root/.ssh/authorized_keys
+        - FQDN=$(hostname -f) ; sed -i -e "s/certname.*$/certname          =\ ${FQDN}/g" /etc/puppetlabs/puppet/puppet.conf 
+        - systemctl enable puppet 
+        - systemctl start puppet
+        - echo "/opt/puppetlabs/bin/puppet agent -t" | at now + 1 minute
