@@ -16,19 +16,22 @@ Prerequisites:
 
 ### Input CSV
 **NOTE: The input CSV must have a header**
-`shortname,domain,machine_profile,macs,power,poweruser,powerpass,powerip,netcfg,foreman_hostgroup_id
+`shortname,domain,machine_profile,macs,power,poweruser,powerpass,powerip,netcfg,foreman_hostgroup_id`
 
 Fields:
- - shortname            Short hostname for the host (use1-foobar-1)
- - domain               Domain name (example.lan, example.com, example.net, etc)
- - machine_profile      See below
- - macs                 Space separated list of MAC addresses for the host (1 min)
- - power                ipmi until we use hardware with redfish or other OOB mgmt
- - poweruer             IPMI username
- - powerpass            IPMI password
- - powerip              IPMI IP
- - netcfg               See below for this structure
- - foreman_hostgroup_id The numerical ID of the hostgroup to pre-create this host in
+
+| Field | Description |
+| ----- | ----------- |
+| shortname | Short hostname for the host (use1-foobar-1) |
+| domain | Domain name (example.lan, example.com, example.net, etc) |
+| machine_profile | See below |
+| macs | Space separated list of MAC addresses for the host (1 min) |
+| power | ipmi until we use hardware with redfish or other OOB mgmt |
+| poweruer | IPMI username |
+| powerpass | IPMI password |
+| powerip | IPMI IP |
+| netcfg | See below for this structure |
+| foreman_hostgroup_id | The numerical ID of the hostgroup to pre-create this host in |
 
 ### Caveats
 Maasterblaster uses PXE to boot and image machines, thus each subnet that is 
